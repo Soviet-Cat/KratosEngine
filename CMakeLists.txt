@@ -4,7 +4,7 @@ project(KratosEngine)
 
 set(SDL_SHARED OFF CACHE BOOL "Build SDL statically.")
 set(SDL_STATIC ON CACHE BOOL "Build SDL statically.")
-add_subdirectory("SDL3")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL3")
 
 add_library(KratosEngine STATIC)
 
@@ -16,7 +16,7 @@ set_target_properties(KratosEngine PROPERTIES
 target_include_directories(KratosEngine
     PRIVATE 
         "${CMAKE_CURRENT_SOURCE_DIR}/include"
-        "${CMAKE_CURRENT_SOURCE_DIR}/SDL/include"
+        "${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL3/include"
     PUBLIC 
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> 
         $<INSTALL_INTERFACE:include>
