@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.20)
 
 project(KratosEngine)
 
+set(SDL_SHARED OFF CACHE BOOL "Build SDL statically.")
+set(SDL_STATIC ON CACHE BOOL "Build SDL statically.")
+add_subdirectory("SDL3")
+
 add_library(KratosEngine STATIC)
 
 set_target_properties(KratosEngine PROPERTIES
@@ -10,7 +14,9 @@ set_target_properties(KratosEngine PROPERTIES
 )
 
 target_include_directories(KratosEngine
-    PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    PRIVATE 
+        "${CMAKE_CURRENT_SOURCE_DIR}/include"
+        "${CMAKE_CURRENT_SOURCE_DIR}/SDL/include"
     PUBLIC 
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> 
         $<INSTALL_INTERFACE:include>
@@ -24,17 +30,14 @@ file(GLOB_RECURSE KratosEngine_SOURCES
 )
 target_sources(KratosEngine PRIVATE ${KratosEngine_SOURCES})
 
+target_link_libraries(KratosEngine PRIVATE SDL3-static)
+target_compile_definitions(KratosEngine PRIVATE SDL_STATIC)
+
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION "include/KratosEngine")
 install(TARGETS KratosEngine 
-        EXPORT KratosEngineTargets
         RUNTIME DESTINATION "bin" 
         LIBRARY DESTINATION "lib" 
         ARCHIVE DESTINATION "lib"
-)
-install(EXPORT KratosEngineTargets
-        FILE "KratosEngineTargets.cmake"
-        NAMESPACE KratosEngine::
-        DESTINATION "lib/cmake/KratosEngine"
 )
 
 include(CMakePackageConfigHelpers)
